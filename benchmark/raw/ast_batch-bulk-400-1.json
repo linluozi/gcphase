@@ -6,6 +6,6 @@
   "impl": "bulk",
   "sample": 1,
   "scale": 400,
-  "seconds": 0.8588555790483952,
+  "seconds": 0.8505206098780036,
   "suite": "ast_batch"
 }

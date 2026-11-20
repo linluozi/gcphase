@@ -3,28 +3,28 @@
     "0": {
       "collected": 0,
       "count": 258,
-      "time_s": 0.069885888,
+      "time_s": 0.064748279,
       "uncollectable": 0
     },
     "1": {
       "collected": 0,
       "count": 23,
-      "time_s": 0.207446397,
+      "time_s": 0.158677346,
       "uncollectable": 0
     },
     "2": {
       "collected": 0,
       "count": 2,
-      "time_s": 0.479243913,
+      "time_s": 0.511159789,
       "uncollectable": 0
     }
   },
   "collections": 283,
-  "gc_s": 0.756576198,
-  "gc_share": 0.461142,
+  "gc_s": 0.734585414,
+  "gc_share": 0.460433,
   "impl": "tracked",
   "sample": 2,
   "scale": 400,
-  "seconds": 1.640656254,
+  "seconds": 1.595423655,
   "suite": "ast_batch"
 }

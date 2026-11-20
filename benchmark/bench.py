@@ -122,13 +122,22 @@ def meta():
 
 
 def run_suite(name, fn, scales, samples, warmup, raw_dir):
+    """Interleave the two implementations so load drift hits both equally.
+
+    Running all ``tracked`` samples and then all ``bulk`` samples would let a
+    background build inflate one arm only; an independent recheck showed
+    exactly that.  Each sample round runs both arms back to back, and the
+    order flips on odd rounds to cancel any ordering bias.
+    """
     data = {"tracked": {}, "bulk": {}}
-    for impl in ("tracked", "bulk"):
-        for scale in scales:
-            for _ in range(warmup):
-                measure(fn, scale, impl)
-            records = []
-            for index in range(samples):
+    for scale in scales:
+        for _ in range(warmup):
+            measure(fn, scale, "tracked")
+            measure(fn, scale, "bulk")
+        records = {"tracked": [], "bulk": []}
+        for index in range(samples):
+            order = ("tracked", "bulk") if index % 2 == 0 else ("bulk", "tracked")
+            for impl in order:
                 seconds, extra = measure(fn, scale, impl)
                 record = {
                     "suite": name,
@@ -138,14 +147,16 @@ def run_suite(name, fn, scales, samples, warmup, raw_dir):
                     "seconds": seconds,
                     **extra,
                 }
-                records.append(record)
+                records[impl].append(record)
                 raw_path = raw_dir / f"{name}-{impl}-{scale}-{index}.json"
                 raw_path.write_text(json.dumps(record, indent=2, sort_keys=True))
+        for impl in ("tracked", "bulk"):
+            arm = records[impl]
             data[impl][str(scale)] = {
-                "summary": summarize(records),
-                "samples": [round(r["seconds"], 6) for r in records],
-                "gc_s": [round(r.get("gc_s") or 0.0, 6) for r in records],
-                "gc_share": [r.get("gc_share") for r in records],
+                "summary": summarize(arm),
+                "samples": [round(r["seconds"], 6) for r in arm],
+                "gc_s": [round(r.get("gc_s") or 0.0, 6) for r in arm],
+                "gc_share": [r.get("gc_share") for r in arm],
             }
     return data
 

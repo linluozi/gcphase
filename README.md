@@ -6,9 +6,9 @@ reclaim that time on batch loads with a reversible three-line context manager.
 
 Upstream: none
 
-**Evidence in one line:** on 400 real CPython stdlib files (7.0 MB), 46.0% of
-the AST batch parse is cyclic GC; `bulk()` takes 1.641 s down to 0.862 s
-(**1.90x**) with peak RSS unchanged, and the callback attribution is within
+**Evidence in one line:** on 400 real CPython stdlib files (7.0 MB), 45.3–46.9%
+of the AST batch parse is cyclic GC; `bulk()` takes 1.593 s down to 0.845 s
+(**1.89x**) with peak RSS unchanged, and the callback attribution is within
 1.5% of an independent GC-on/GC-off wall-clock measurement.
 
 This is an original tool, not a fork or a patch of another project. It targets
@@ -32,7 +32,7 @@ print(tracker.dumps())
 ```
 
 The counter-intuitive part is how large that bill can be. Building a list of
-400,000 dicts on CPython 3.12 spends **56.6%** of its time in the collector,
+400,000 dicts on CPython 3.12 spends **56%** of its time in the collector,
 even though the data structure is completely acyclic. The collector is not
 finding garbage; it is repeatedly rescanning a live heap that it can never
 free.
@@ -46,28 +46,28 @@ retains all ASTs, which is what a linter does in one pass.
 
 | workload | scale | GC on, median (p25–p75) | `bulk()` median | speedup | GC share | gen-2 time |
 | --- | --- | --- | --- | --- | --- | --- |
-| bulk_dicts | 50,000 | 47.82 ms (47.62–48.21) | 27.17 ms | **1.76x** | 36.0–39.6% | 12.3 ms |
-| bulk_dicts | 100,000 | 104.78 ms (104.52–105.71) | 53.17 ms | **1.97x** | 42.0–43.2% | 33.3 ms |
-| bulk_dicts | 200,000 | 248.22 ms (247.04–248.31) | 118.53 ms | **2.09x** | 50.4–51.3% | 102.5 ms |
-| bulk_dicts | 400,000 | 579.40 ms (577.49–583.85) | 244.09 ms | **2.37x** | 56.3–56.9% | 281.7 ms |
-| **ast_batch (real corpus)** | **400 files / 7.0 MB** | **1,640.66 ms (1,637.90–1,655.61)** | **861.96 ms** | **1.90x** | **46.0–46.7%** | **491.6 ms** |
+| bulk_dicts | 50,000 | 46.30 ms (44.98–47.30) | 30.06 ms | **1.54x** | 36.8–40.2% | 12.2 ms |
+| bulk_dicts | 100,000 | 103.50 ms (101.81–104.31) | 58.90 ms | **1.76x** | 43.0–45.4% | 33.2 ms |
+| bulk_dicts | 200,000 | 246.74 ms (246.69–247.60) | 119.90 ms | **2.06x** | 50.2–51.6% | 101.8 ms |
+| bulk_dicts | 400,000 | 561.99 ms (561.94–563.41) | 246.62 ms | **2.28x** | 55.5–56.1% | 270.2 ms |
+| **ast_batch (real corpus)** | **400 files / 7.0 MB** | **1,593.39 ms (1,577.55–1,595.42)** | **845.19 ms** | **1.89x** | **45.3–46.9%** | **510.1 ms** |
 
-Median speedup over the four synthetic scales is **2.03x**; the largest scale is
-**2.37x**; the real corpus is **1.90x**.
+Median speedup over the four synthetic scales is **1.91x**; the largest scale is
+**2.28x**; the real corpus is **1.89x**.
 
-The real corpus is not dominated by gen-0 noise: of its 765.7 ms median GC time,
-69.9 ms is gen-0, 204.2 ms is gen-1 and **491.6 ms is gen-2** (2 collections,
-about 246 ms each). That is 30.0% of the whole run spent rescanning retained
+The real corpus is not dominated by gen-0 noise: of its 734.6 ms median GC time,
+63.9 ms is gen-0, 158.7 ms is gen-1 and **510.1 ms is gen-2** (2 collections,
+about 255 ms each). That is 32.0% of the whole run spent rescanning retained
 ASTs.
 
 ### The cost grows superlinearly
 
-Per-doubling gen-2 time from the raw samples: 12.3 → 33.3 → 102.5 → 281.7 ms.
-Total gen-2 time grows **22.8x for an 8x larger heap**, i.e. roughly **n^1.5**,
+Per-doubling gen-2 time from the raw samples: 12.2 → 33.2 → 101.8 → 270.2 ms.
+Total gen-2 time grows **22.1x for an 8x larger heap**, i.e. roughly **n^1.5**,
 while the number of gen-2 collections only grows from 1 to 7. The mechanism is
 simple and measurable: every gen-2 pass walks the entire live heap, and the
-live heap grows with n. This is why the GC share rises monotonically from 36%
-to 57% and why the speedup rises with scale.
+live heap grows with n. This is why the GC share rises monotonically from 37%
+to 56% and why the speedup rises with scale.
 
 ### Calibration: the attribution is independently checked
 
@@ -93,24 +93,28 @@ the main table. The `bulk()` timings in the main table include the restoring
 
 | mode | peak RSS |
 | --- | --- |
-| GC on | 224,172 KB |
-| `bulk()` | 224,172 KB |
+| GC on | 224,316 KB |
+| `bulk()` | 224,316 KB |
 
 Ratio **1.000x**. The ASTs are retained either way; pausing the collector does
 not increase the live set. This is a speed/memory-latency trade, not a
 speed/memory-size trade: cycles created inside the block are only reclaimed at
 exit.
 
-### Replication
+### Replication and a harness fix
 
-A second full run on this machine, immediately after the first and with no other
-workloads, gave **1.77x / 1.98x / 2.12x / 2.35x** on the four synthetic scales
-and **1.84x** on the real corpus; peak RSS was 224,292 KB in both modes
-(1.000x). Run-to-run ratios are stable, but **absolute millisecond values are
-not**: short microbenchmarks on a shared 4-vCPU box move with concurrent load.
-A third recheck that overlapped with a `pip install` build dropped the synthetic
-ratios to 1.03–1.24x for 50k–200k while the real-corpus ratio stayed at 1.89x.
-Run this benchmark on an idle machine before comparing absolute milliseconds.
+An independent read-only verifier cloned the repository fresh and re-ran the
+suite: it reproduced the real-corpus ratio at **1.889x** (this table: 1.885x)
+and peak RSS at 224,180 KB in both modes (1.000x).
+
+That recheck also exposed a flaw in the first version of this harness: it ran
+all GC-on samples for a scale and then all `bulk()` samples, so a background
+`pip install` that overlapped only the second block depressed the synthetic
+ratios to 1.03–1.24x while the real-corpus ratio stayed at 1.89x. The harness
+now interleaves the two arms sample by sample and flips their order on odd
+rounds; every number in this README comes from the interleaved run. Short
+microbenchmarks on a shared 4-vCPU box are still load-sensitive: run this on an
+idle machine before comparing absolute milliseconds.
 
 ## Install
 
@@ -166,10 +170,10 @@ applicable. The same axes are reported with the evidence that does exist:
 | --- | --- | --- |
 | G1 upstream tests | **N/A** | no upstream repository is modified; this is original code (`Upstream: none`) |
 | G2 byte-identical differential | **N/A for upstream**; substitute passes | `tests/test_equivalence.py`: 400 real stdlib files parsed with and without `bulk()`, sha256 of `ast.dump` compared, 0 mismatches. `python3 -m unittest tests.test_equivalence -v` |
-| G3 median speedup | **2.03x** | median of the four `bulk_dicts` scales in the table; `python3 benchmark/bench.py --samples 5 --warmup 3` |
-| G3b real-corpus speedup | **1.90x** | 400 real stdlib files, 5 samples; same command |
-| G4 largest scale | **2.37x** | 400,000 retained dicts; same command |
-| G5 peak RSS | **1.000x** | 224,172 KB both modes; `python3 benchmark/bench.py` prints `peak_rss` |
+| G3 median speedup | **1.91x** | median of the four `bulk_dicts` scales in the table; `python3 benchmark/bench.py --samples 5 --warmup 3` |
+| G3b real-corpus speedup | **1.89x** | 400 real stdlib files, 5 samples; same command |
+| G4 largest scale | **2.28x** | 400,000 retained dicts; same command |
+| G5 peak RSS | **1.000x** | 224,316 KB both modes; `python3 benchmark/bench.py` prints `peak_rss` |
 
 Test suite: **17 tests**, all passing in about 4.5 seconds:
 
@@ -212,9 +216,9 @@ implementation × scale × sample), and `benchmark/baseline.json` /
 | sampler | `time.perf_counter()` |
 | samples | 3 warmups + 5 timed per (implementation, scale) |
 
-Maximum relative standard deviation across all timed cells: **2.70%**
-(`bulk_dicts` 50k, GC-on). No cell exceeded the 10% noise threshold, so no
-GC/cache/page-fault correction is needed.
+Maximum relative standard deviation across all timed cells: **7.96%**
+(`bulk_dicts` 50k, `bulk()` arm). No cell exceeded the 10% threshold; the 50k
+cell is the noisiest because its whole measured time is only 30–46 ms.
 
 ## Limitations
 
@@ -232,9 +236,9 @@ GC/cache/page-fault correction is needed.
 ## 本轮创新
 
 首次把 CPython 3.12 的 **gen-2 全堆重扫**量化成批量构建的超线性来源：在 400 个
-真实 stdlib 源文件（7.0 MB）的 AST 批量解析上，46.0–46.7% 的墙钟时间在循环 GC
-里，其中 gen-2 占 491.6 ms（30.0%），且 gen-2 总耗时随存活堆约 **n^1.5** 增长；
-一个可回滚的 `bulk()` 把真实语料从 1.641 s 降到 0.862 s（**1.90x**），峰值 RSS
+真实 stdlib 源文件（7.0 MB）的 AST 批量解析上，45.3–46.9% 的墙钟时间在循环 GC
+里，其中 gen-2 占 510.1 ms（32.0%），且 gen-2 总耗时随存活堆约 **n^1.5** 增长；
+一个可回滚的 `bulk()` 把真实语料从 1.593 s 降到 0.845 s（**1.89x**），峰值 RSS
 不变。与 `slotfit`/`slotcert`/`slotforge`（对象布局）、`memtruth`（tracemalloc
 与 RSS 对拍）、`coldbudget`（import 冷启动）不同，这里测的是**收集器自身**，并
 用 GC-on/GC-off 墙钟差独立校准 callback 归因（误差 ≤1.46%）。这不是"发现

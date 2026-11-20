@@ -6,6 +6,6 @@
   "impl": "bulk",
   "sample": 1,
   "scale": 50000,
-  "seconds": 0.027168160304427147,
+  "seconds": 0.032196756452322006,
   "suite": "bulk_dicts"
 }

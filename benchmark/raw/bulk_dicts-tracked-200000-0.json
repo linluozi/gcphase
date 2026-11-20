@@ -3,28 +3,28 @@
     "0": {
       "collected": 0,
       "count": 518,
-      "time_s": 0.010789475,
+      "time_s": 0.010844077,
       "uncollectable": 0
     },
     "1": {
       "collected": 0,
       "count": 47,
-      "time_s": 0.012416696,
+      "time_s": 0.012352425,
       "uncollectable": 0
     },
     "2": {
       "collected": 0,
       "count": 4,
-      "time_s": 0.102543349,
+      "time_s": 0.101556897,
       "uncollectable": 0
     }
   },
   "collections": 569,
-  "gc_s": 0.125749521,
-  "gc_share": 0.503898,
+  "gc_s": 0.124753399,
+  "gc_share": 0.505713,
   "impl": "tracked",
   "sample": 0,
   "scale": 200000,
-  "seconds": 0.249553595,
+  "seconds": 0.24668825,
   "suite": "bulk_dicts"
 }
