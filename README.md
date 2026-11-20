@@ -160,7 +160,7 @@ applicable. The same axes are reported with the evidence that does exist:
 | G4 largest scale | **2.37x** | 400,000 retained dicts; same command |
 | G5 peak RSS | **1.000x** | 224,172 KB both modes; `python3 benchmark/bench.py` prints `peak_rss` |
 
-Test suite: **17 tests**, all passing in under 2 seconds:
+Test suite: **17 tests**, all passing in about 4.5 seconds:
 
 ```bash
 python3 -m unittest discover -s tests -v
