@@ -101,6 +101,17 @@ not increase the live set. This is a speed/memory-latency trade, not a
 speed/memory-size trade: cycles created inside the block are only reclaimed at
 exit.
 
+### Replication
+
+A second full run on this machine, immediately after the first and with no other
+workloads, gave **1.77x / 1.98x / 2.12x / 2.35x** on the four synthetic scales
+and **1.84x** on the real corpus; peak RSS was 224,292 KB in both modes
+(1.000x). Run-to-run ratios are stable, but **absolute millisecond values are
+not**: short microbenchmarks on a shared 4-vCPU box move with concurrent load.
+A third recheck that overlapped with a `pip install` build dropped the synthetic
+ratios to 1.03–1.24x for 50k–200k while the real-corpus ratio stayed at 1.89x.
+Run this benchmark on an idle machine before comparing absolute milliseconds.
+
 ## Install
 
 No third-party dependencies:
