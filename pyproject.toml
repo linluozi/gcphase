@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gcphase"
+version = "0.1.0"
+description = "Attribute CPython cyclic-GC time to workload phases, and reclaim it on batch loads"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+authors = [{name = "linluozi"}]
+keywords = ["gc", "profiling", "performance", "cpython"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Topic :: Software Development :: Debuggers",
+]
+
+[project.scripts]
+gcphase = "gcphase.cli:main"
+
+[tool.setuptools]
+packages = ["gcphase"]

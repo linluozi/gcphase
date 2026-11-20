@@ -1,0 +1,11 @@
+{
+  "collected_at_exit": true,
+  "collections_inside": 0,
+  "gc_s": 0.0,
+  "gc_share": null,
+  "impl": "bulk",
+  "sample": 3,
+  "scale": 100000,
+  "seconds": 0.05317308567464352,
+  "suite": "bulk_dicts"
+}

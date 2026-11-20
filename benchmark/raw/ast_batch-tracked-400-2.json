@@ -1,0 +1,30 @@
+{
+  "by_generation": {
+    "0": {
+      "collected": 0,
+      "count": 258,
+      "time_s": 0.069885888,
+      "uncollectable": 0
+    },
+    "1": {
+      "collected": 0,
+      "count": 23,
+      "time_s": 0.207446397,
+      "uncollectable": 0
+    },
+    "2": {
+      "collected": 0,
+      "count": 2,
+      "time_s": 0.479243913,
+      "uncollectable": 0
+    }
+  },
+  "collections": 283,
+  "gc_s": 0.756576198,
+  "gc_share": 0.461142,
+  "impl": "tracked",
+  "sample": 2,
+  "scale": 400,
+  "seconds": 1.640656254,
+  "suite": "ast_batch"
+}

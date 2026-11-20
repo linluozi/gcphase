@@ -1,0 +1,11 @@
+{
+  "collected_at_exit": true,
+  "collections_inside": 0,
+  "gc_s": 0.0,
+  "gc_share": null,
+  "impl": "bulk",
+  "sample": 0,
+  "scale": 400,
+  "seconds": 0.8619596660137177,
+  "suite": "ast_batch"
+}

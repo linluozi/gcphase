@@ -1,0 +1,30 @@
+{
+  "by_generation": {
+    "0": {
+      "collected": 0,
+      "count": 1038,
+      "time_s": 0.021339309,
+      "uncollectable": 0
+    },
+    "1": {
+      "collected": 0,
+      "count": 94,
+      "time_s": 0.024551588,
+      "uncollectable": 0
+    },
+    "2": {
+      "collected": 0,
+      "count": 7,
+      "time_s": 0.27907465,
+      "uncollectable": 0
+    }
+  },
+  "collections": 1139,
+  "gc_s": 0.324965548,
+  "gc_share": 0.56272,
+  "impl": "tracked",
+  "sample": 1,
+  "scale": 400000,
+  "seconds": 0.577490904,
+  "suite": "bulk_dicts"
+}

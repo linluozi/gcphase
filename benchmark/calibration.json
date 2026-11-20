@@ -1,0 +1,46 @@
+{
+  "repeats": 3,
+  "runs": {
+    "100000": {
+      "consistent": true,
+      "gc_off_s": 0.060746,
+      "gc_on_s": 0.102016,
+      "measured_delta_s": 0.04127,
+      "relative_error": 0.014604,
+      "repeats": 3,
+      "speedup": 1.679385,
+      "tracker_sum_s": 0.041872
+    },
+    "200000": {
+      "consistent": true,
+      "gc_off_s": 0.121234,
+      "gc_on_s": 0.23897,
+      "measured_delta_s": 0.117736,
+      "relative_error": -0.009765,
+      "repeats": 3,
+      "speedup": 1.971143,
+      "tracker_sum_s": 0.116586
+    },
+    "400000": {
+      "consistent": true,
+      "gc_off_s": 0.244738,
+      "gc_on_s": 0.561223,
+      "measured_delta_s": 0.316486,
+      "relative_error": -0.013781,
+      "repeats": 3,
+      "speedup": 2.293163,
+      "tracker_sum_s": 0.312124
+    },
+    "50000": {
+      "consistent": true,
+      "gc_off_s": 0.030612,
+      "gc_on_s": 0.045833,
+      "measured_delta_s": 0.015222,
+      "relative_error": -0.008877,
+      "repeats": 3,
+      "speedup": 1.497251,
+      "tracker_sum_s": 0.015087
+    }
+  },
+  "workload": "bulk_dicts (dict with 4 keys + 2-element list)"
+}

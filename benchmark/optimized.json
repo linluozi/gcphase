@@ -1,0 +1,206 @@
+{
+  "meta": {
+    "command": "python3 benchmark/bench.py --samples 5 --warmup 3",
+    "corpus": {
+      "bytes": 7005221,
+      "files": 400,
+      "python": "3.12.3",
+      "root": "/usr/lib/python3.12",
+      "sha256": "7039d319857ababcc60aa8c739891830d4b7a0634baf857345c47922f649b8b7"
+    },
+    "cpu": "AMD EPYC 7K62 48-Core Processor",
+    "executable": "/usr/bin/python3",
+    "gc_threshold": [
+      700,
+      10,
+      10
+    ],
+    "memory": "3812564 kB",
+    "platform": "Linux-6.8.0-124-generic-x86_64-with-glibc2.39",
+    "python": "3.12.3",
+    "seed": 0
+  },
+  "peak_rss": {
+    "ast_batch": {
+      "bulk_kb": 224172,
+      "tracked_kb": 224172
+    }
+  },
+  "runs": {
+    "ast_batch": {
+      "400": {
+        "gc_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "gc_share": [
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "samples": [
+          0.86196,
+          0.858856,
+          0.876766,
+          0.864198,
+          0.86002
+        ],
+        "summary": {
+          "mean_s": 0.86436,
+          "median_s": 0.86196,
+          "n": 5,
+          "p25_s": 0.86002,
+          "p75_s": 0.864198,
+          "rsd_pct": 0.836,
+          "stdev_s": 0.007225
+        }
+      }
+    },
+    "bulk_dicts": {
+      "100000": {
+        "gc_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "gc_share": [
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "samples": [
+          0.054035,
+          0.054389,
+          0.053095,
+          0.053173,
+          0.052951
+        ],
+        "summary": {
+          "mean_s": 0.053528,
+          "median_s": 0.053173,
+          "n": 5,
+          "p25_s": 0.053095,
+          "p75_s": 0.054035,
+          "rsd_pct": 1.198,
+          "stdev_s": 0.000641
+        }
+      },
+      "200000": {
+        "gc_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "gc_share": [
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "samples": [
+          0.117088,
+          0.122255,
+          0.11853,
+          0.118579,
+          0.11677
+        ],
+        "summary": {
+          "mean_s": 0.118644,
+          "median_s": 0.11853,
+          "n": 5,
+          "p25_s": 0.117088,
+          "p75_s": 0.118579,
+          "rsd_pct": 1.837,
+          "stdev_s": 0.002179
+        }
+      },
+      "400000": {
+        "gc_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "gc_share": [
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "samples": [
+          0.244464,
+          0.243682,
+          0.244812,
+          0.243055,
+          0.244089
+        ],
+        "summary": {
+          "mean_s": 0.24402,
+          "median_s": 0.244089,
+          "n": 5,
+          "p25_s": 0.243682,
+          "p75_s": 0.244464,
+          "rsd_pct": 0.281,
+          "stdev_s": 0.000685
+        }
+      },
+      "50000": {
+        "gc_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "gc_share": [
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "samples": [
+          0.026767,
+          0.027168,
+          0.026721,
+          0.027315,
+          0.028139
+        ],
+        "summary": {
+          "mean_s": 0.027222,
+          "median_s": 0.027168,
+          "n": 5,
+          "p25_s": 0.026767,
+          "p75_s": 0.027315,
+          "rsd_pct": 2.102,
+          "stdev_s": 0.000572
+        }
+      }
+    }
+  },
+  "speedups": {
+    "ast_batch": {
+      "400": 1.9034
+    },
+    "bulk_dicts": {
+      "100000": 1.9706,
+      "200000": 2.0942,
+      "400000": 2.3737,
+      "50000": 1.76
+    }
+  }
+}
