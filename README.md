@@ -6,6 +6,11 @@ reclaim that time on batch loads with a reversible three-line context manager.
 
 Upstream: none
 
+**Evidence in one line:** on 400 real CPython stdlib files (7.0 MB), 46.0% of
+the AST batch parse is cyclic GC; `bulk()` takes 1.641 s down to 0.862 s
+(**1.90x**) with peak RSS unchanged, and the callback attribution is within
+1.5% of an independent GC-on/GC-off wall-clock measurement.
+
 This is an original tool, not a fork or a patch of another project. It targets
 CPython 3.9+ and uses only the standard library.
 
@@ -77,9 +82,10 @@ difference. That difference is measured without trusting the callbacks.
 | 200,000 | 238.97 ms | 121.23 ms | 117.74 ms | 116.59 ms | **-0.98%** | 1.97x |
 | 400,000 | 561.22 ms | 244.74 ms | 316.49 ms | 312.12 ms | **-1.38%** | 2.29x |
 
-Raw output: `benchmark/calibration.json`. The `bulk()` timings in the main table
-include the restoring `gc.collect()` at block exit, so they are conservative
-relative to these calibration numbers.
+Raw output: `benchmark/calibration.json`. These runs call the workload through
+the `calibrate()` wrapper (no query pass), so their ratios differ slightly from
+the main table. The `bulk()` timings in the main table include the restoring
+`gc.collect()` at block exit, so they are conservative.
 
 ### Peak RSS does not move
 
