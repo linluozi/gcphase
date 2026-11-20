@@ -11,8 +11,10 @@ of the AST batch parse is cyclic GC; `bulk()` takes 1.593 s down to 0.845 s
 (**1.89x**) with peak RSS unchanged, and the callback attribution is within
 1.5% of an independent GC-on/GC-off wall-clock measurement.
 
-This is an original tool, not a fork or a patch of another project. It targets
-CPython 3.9+ and uses only the standard library.
+This is an original tool, not a fork or a patch of another project. It declares
+CPython 3.9+ (only 3.12.3 is installed on the machine used for the measurements,
+so that is the only version actually exercised here) and uses only the standard
+library.
 
 ## What it does
 
