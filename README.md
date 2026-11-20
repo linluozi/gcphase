@@ -116,6 +116,11 @@ rounds; every number in this README comes from the interleaved run. Short
 microbenchmarks on a shared 4-vCPU box are still load-sensitive: run this on an
 idle machine before comparing absolute milliseconds.
 
+After the harness fix, a third full run on an idle machine reproduced
+**1.46x / 1.72x / 1.95x / 2.31x** and **1.892x** on the real corpus, with peak
+RSS 224,280 KB in both modes (1.000x). That pins the earlier 400k outlier
+(808 ms, 3.15x) on the background build, not on the workload.
+
 ## Install
 
 No third-party dependencies:
